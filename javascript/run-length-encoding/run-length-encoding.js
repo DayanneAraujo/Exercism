@@ -1,37 +1,10 @@
-export const encode = (data) => {
-  let encodedData = ""
-  for (let i=0; i < data.length; i++){
-    let start = i;
-    let count = 1;
-    let isNewToken = false;
 
-    while(data[start]===data[start + count]) {
-      count++;
-      isNewToken = true;
-    }
-    i = start + count-1;
-    if (isNewToken) {
-      encodedData = `${encodedData}${count}${data[start]}`;
-    } else {
-      encodedData = `${encodedData}${data[start]}`
-    }
-  }
-  return encodedData;
+export const encode = data => {
+  const re = /([\w\s])\1+/g
+  return data.replace(re, (repetition, char) => `${repetition.length}${char}`);
 };
 
 export const decode = data => {
-  let decodedData = "";
-  let count = "";
-
-  data.split('').forEach(element => {
-    if (Number.isInteger(parseInt(element))) {
-      count += element;
-    }
-    else {
-      decodedData = `${decodedData}${element.repeat(count) || element}`;
-      count = "";
-    }
-  });
-
-  return decodedData
-}
+  const re = /(\d+)([\w\s])/g
+  return data.replace(re, (match, group_digit, group_char) => group_char.repeat(group_digit));
+};
